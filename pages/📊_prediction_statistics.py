@@ -38,10 +38,21 @@ def plot_fraud_by_region_and_district(fraud_counts):
     
     return fig
 
-st.write('### Number of Fraud Cases by Region and District')
+# Filter for fraudulent cases and group by region and district
+if  'resultspred' in st.session_state and 'pourcentage' in st.session_state :
+ fraudulent_data = st.session_state['resultspred'][st.session_state['resultspred']['decoded_class'] == 'Fraud']
+ fraud_counts = fraudulent_data.groupby(['region', 'districts']).size().reset_index(name='count')
+ st.write('### Prediction Percentages')
+ fig = plot_pie_chart(st.session_state['pourcentage'])
+ st.pyplot(fig)
+ st.divider()
+ st.write('### Number of Fraud Cases by Region and District')
 # Example usage
-fig = plot_fraud_by_region_and_district(fraud_counts)
-st.pyplot(fig)
+ fig = plot_fraud_by_region_and_district(fraud_counts)
+ st.pyplot(fig)
 
-#  fraud_counts_pivot = fraud_counts.pivot(index='districts', columns='region', values='count').fillna(0)
-#  st.bar_chart(fraud_counts_pivot)
+
+else :
+  
+   st.warning("⚠️ Please note: You need to make predictions first before viewing the prediction statistics. Make sure to run the prediction step to proceed.")
+
